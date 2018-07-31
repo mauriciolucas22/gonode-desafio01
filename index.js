@@ -2,6 +2,7 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const path = require('path');
 const bodyParser = require('body-parser');
+const moment = require('moment');
 
 const app = express();
 
@@ -41,7 +42,9 @@ app.get('/minor', isEmptyName, (req, res) => {
 app.post('/check', (req, res) => {
   const { name, date } = req.body;
 
-  res.redirect(`/major?name=${name}`);
+  const age = moment().diff(moment(date, 'YYYY-MM-DD'), 'years');
+
+  res.redirect(age >= 18 ? `/major?name=${name}` : `/minor?name=${name}`);
 });
 
 app.listen(3000);
